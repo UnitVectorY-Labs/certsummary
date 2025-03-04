@@ -104,3 +104,26 @@
   footer a:hover {
     text-decoration: underline;
   }
+
+  /* Distinguished Name Formatting */
+  .dn-container {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .dn-item {
+    margin-bottom: 2px;
+  }
+
+  .dn-label {
+    font-weight: bold;
+    margin-right: 5px;
+  }
+
+  .raw-dn {
+    color: #777;
+    font-size: 0.8em;
+    margin-top: 4px;
+    display: block;
+  }

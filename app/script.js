@@ -70,6 +70,46 @@ function formatSANs(sanArray) {
   }
 }
 
+// Helper: Format hex string with colons for better readability
+function formatHexWithColons(hexString) {
+  if (!hexString) return "Unknown";
+  // Insert a colon after every 2 characters (except the last pair)
+  return hexString.replace(/(.{2})(?!$)/g, '$1:');
+}
+
+// Helper: Format distinguished name string into readable HTML
+function formatDistinguishedName(dnString) {
+  if (!dnString || typeof dnString !== 'string') return "Unknown";
+  
+  // Parse the DN string which is typically in the format: /C=US/ST=State/L=Locality/O=Org/CN=Name
+  const parts = dnString.split('/').filter(p => p.length > 0);
+  const labels = {
+    'C': 'Country',
+    'ST': 'State/Province',
+    'L': 'Locality',
+    'O': 'Organization',
+    'OU': 'Organizational Unit',
+    'CN': 'Common Name',
+    'E': 'Email',
+    'DC': 'Domain Component'
+  };
+  
+  let formattedDN = '<div class="dn-container">';
+  parts.forEach(part => {
+    const [key, value] = part.split('=');
+    if (key && value) {
+      const label = labels[key] || key;
+      // If the key isn't in our known labels, just show the original key with the friendly name in parentheses
+      // If it is a known key, show the friendly name with the original key in parentheses
+      const displayLabel = labels[key] ? `${labels[key]} (${key})` : key;
+      formattedDN += `<div class="dn-item"><span class="dn-label">${displayLabel}:</span> ${value}</div>`;
+    }
+  });
+  formattedDN += '</div>';
+  
+  return formattedDN;
+}
+
 function processCertificate(pem) {
   var output = document.getElementById('output');
   if (pem.indexOf('-----BEGIN CERTIFICATE-----') === -1) {
@@ -92,6 +132,14 @@ function processCertificate(pem) {
     var notAfter = x509.getNotAfter();
     var formattedNotBefore = formatDate(notBefore);
     var formattedNotAfter = formatDate(notAfter);
+    
+    // Format the distinguished name strings
+    var formattedIssuer = formatDistinguishedName(issuerStr);
+    var formattedSubject = formatDistinguishedName(subjectStr);
+    
+    // Get and format serial number
+    var serialNumberHex = x509.getSerialNumberHex();
+    var formattedSerialNumber = formatHexWithColons(serialNumberHex);
 
     // Fingerprints
     var certHex = x509.hex;
@@ -109,12 +157,16 @@ function processCertificate(pem) {
     var html = `
       <table>
         <tr>
-          <td>Issuer</td>
-          <td>${issuerStr}</td>
+          <td>Subject</td>
+          <td>${formattedSubject}<br><small class="raw-dn">${subjectStr}</small></td>
         </tr>
         <tr>
-          <td>Subject</td>
-          <td>${subjectStr}</td>
+          <td>Issuer</td>
+          <td>${formattedIssuer}<br><small class="raw-dn">${issuerStr}</small></td>
+        </tr>
+        <tr>
+          <td>Serial Number</td>
+          <td>${formattedSerialNumber}</td>
         </tr>
         <tr>
           <td>Valid From</td>
