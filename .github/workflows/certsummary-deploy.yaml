@@ -7,6 +7,7 @@ on:
 permissions:
   contents: read  # Required to clone the repository
   pages: write    # Allows publishing to GitHub Pages
+  id-token: write # Required for the `actions/deploy-pages@v4`
 
 concurrency:
   group: deploy
