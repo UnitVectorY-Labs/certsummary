@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>certsummary</title>
+  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jsrsasign/11.1.0/jsrsasign-all-min.js" integrity="sha512-Eu9j+HZBor7muHf6IDWoWZ8FKVr6nKe9eIIVR28NEte4Y4GiYRlke26XGdR/re81XE/FfLoLYYVkvNk5GY9RvQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="./script.js"></script>
+</head>
+<body>
+
+  <nav class="navbar">
+    <h1>certsummary</h1>
+  </nav>
+
+  <main>
+    <section class="left">
+      <h2>Paste PEM Certificate</h2>
+      <div class="cert-input-container">
+        <textarea id="cert-input" placeholder="Paste your PEM certificate here:&#10;-----BEGIN CERTIFICATE-----&#10;...&#10;-----END CERTIFICATE-----)"></textarea>
+      </div>
+    </section>
+
+    <section class="right">
+      <h2>Certificate Details</h2>
+      <div id="output">
+        <p>No certificate processed yet.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>
+      <a href="https://github.com/UnitVectorY-Labs">UnitVectorY Labs</a> | 
+      <a href="https://opensource.org/licenses/MIT">MIT License</a> | 
+      <a href="https://github.com/UnitVectorY-Labs/certsummary"><strong>certsummary</strong> on GitHub</a>
+    </p>
+  </footer>
+  <script>
+    // Process certificate when text input changes
+    document.getElementById('cert-input').addEventListener('input', function() {
+      var certText = this.value.trim();
+      if (certText && certText.indexOf('-----BEGIN CERTIFICATE-----') !== -1) {
+        processCertificate(certText);
+      }
+    });
+  </script>
+</body>
+</html>
