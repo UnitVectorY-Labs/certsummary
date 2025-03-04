@@ -204,6 +204,6 @@ function processCertificate(pem) {
     `;
     output.innerHTML = html;
   } catch (e) {
-    output.innerHTML = '<p style="color:red;">Error decoding certificate: ' + e + '</p>';
+    output.innerHTML = '<p style="color:red;">Error decoding certificate.</p>';
   }
 }
