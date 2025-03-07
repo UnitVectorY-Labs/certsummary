@@ -160,11 +160,17 @@ function processCertificate(pem) {
       <table>
         <tr>
           <td>Subject</td>
-          <td>${formattedSubject}<br><small class="raw-dn">${subjectStr}</small></td>
+          <td>
+            ${formattedSubject}
+            <small class="raw-dn">${subjectStr}</small>
+          </td>
         </tr>
         <tr>
           <td>Issuer</td>
-          <td>${formattedIssuer}<br><small class="raw-dn">${issuerStr}</small></td>
+          <td>
+            ${formattedIssuer}
+            <small class="raw-dn">${issuerStr}</small>
+          </td>
         </tr>
         <tr>
           <td>Serial Number</td>
