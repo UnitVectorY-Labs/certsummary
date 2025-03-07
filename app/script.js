@@ -50,13 +50,13 @@ function formatSANs(sanArray) {
     for (let i = 0; i < sanArray.array.length; i++) {
       const san = sanArray.array[i];
       if (san.dns) {
-        sanList += `<li>DNS: ${san.dns}</li>`;
+        sanList += `<li>DNS: <span class="domain-container">${san.dns}</span></li>`;
       } else if (san.ip) {
-        sanList += `<li>IP: ${san.ip}</li>`;
+        sanList += `<li>IP: <span class="domain-container">${san.ip}</span></li>`;
       } else if (san.email) {
-        sanList += `<li>Email: ${san.email}</li>`;
+        sanList += `<li>Email: <span class="domain-container">${san.email}</span></li>`;
       } else if (san.uri) {
-        sanList += `<li>URI: ${san.uri}</li>`;
+        sanList += `<li>URI: <span class="domain-container">${san.uri}</span></li>`;
       } else {
         sanList += `<li>${JSON.stringify(san)}</li>`;
       }
@@ -74,7 +74,7 @@ function formatSANs(sanArray) {
 function formatHexWithColons(hexString) {
   if (!hexString) return "Unknown";
   // Insert a colon after every 2 characters (except the last pair)
-  return hexString.replace(/(.{2})(?!$)/g, '$1:');
+  return hexString.replace(/(.{2})(?!$)/g, '$1:').toLowerCase();
 }
 
 // Helper: Format distinguished name string into readable HTML
@@ -138,15 +138,17 @@ function processCertificate(pem) {
     var formattedSubject = formatDistinguishedName(subjectStr);
     
     // Get and format serial number
-    var serialNumberHex = x509.getSerialNumberHex();
+    var serialNumberHex = x509.getSerialNumberHex().toUpperCase();
     var formattedSerialNumber = formatHexWithColons(serialNumberHex);
 
     // Fingerprints
     var certHex = x509.hex;
-    var sha1Fingerprint = KJUR.crypto.Util.hashHex(certHex, "sha1");
-    var sha256Fingerprint = KJUR.crypto.Util.hashHex(certHex, "sha256");
-    var sha1Link = `<a href="https://crt.sh/?q=${sha1Fingerprint}" target="_blank">${sha1Fingerprint}</a>`;
-    var sha256Link = `<a href="https://crt.sh/?q=${sha256Fingerprint}" target="_blank">${sha256Fingerprint}</a>`;
+    var sha1Fingerprint = KJUR.crypto.Util.hashHex(certHex, "sha1").toUpperCase();
+    var formattedSha1Fingerprint = formatHexWithColons(sha1Fingerprint);
+    var sha256Fingerprint = KJUR.crypto.Util.hashHex(certHex, "sha256").toUpperCase();
+    var formattedSha256Fingerprint = formatHexWithColons(sha256Fingerprint);
+    var sha1Link = `<a href="https://crt.sh/?q=${sha1Fingerprint}" target="_blank">↗️ crt.sh</a>`;
+    var sha256Link = `<a href="https://crt.sh/?q=${sha256Fingerprint}" target="_blank">↗️ crt.sh</a>`;
 
     // Security & Cryptographic Info
     var pubKey = x509.getPublicKey();
@@ -166,7 +168,10 @@ function processCertificate(pem) {
         </tr>
         <tr>
           <td>Serial Number</td>
-          <td>${formattedSerialNumber}</td>
+          <td>
+            <div class="scroll-container">${formattedSerialNumber}</div>
+            <small class="scroll-container raw-dn">${serialNumberHex}</small>
+            </td>
         </tr>
         <tr>
           <td>Valid From</td>
@@ -178,11 +183,19 @@ function processCertificate(pem) {
         </tr>
         <tr>
           <td>SHA-1 Fingerprint</td>
-          <td>${sha1Link}</td>
+          <td>
+           <div class="scroll-container">${formattedSha1Fingerprint}</div>
+           <small class="scroll-container raw-dn">${sha1Fingerprint}</small>
+           ${sha1Link}
+           </td>
         </tr>
         <tr>
           <td>SHA-256 Fingerprint</td>
-          <td>${sha256Link}</td>
+          <td>
+            <div class="scroll-container">${formattedSha256Fingerprint}</div>
+            <small class="scroll-container raw-dn">${sha256Fingerprint}</small>
+            ${sha256Link}
+          </td>
         </tr>
         <tr>
           <td>Key Algorithm</td>
@@ -194,7 +207,7 @@ function processCertificate(pem) {
         </tr>
         <tr>
           <td>Primary Domain (CN)</td>
-          <td>${primaryCN}</td>
+          <td><span class="domain-container">${primaryCN}</span></td>
         </tr>
         <tr>
           <td>Additional Domains (SANs)</td>
