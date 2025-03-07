@@ -1,10 +1,6 @@
-// Helper: Format certificate dates to standard format (MMM DD HH:MM:SS YYYY GMT)
-function formatDate(certDateStr) {
-  // Handle both UTCTime (YYMMDDhhmmssZ) and GeneralizedTime (YYYYMMDDhhmmssZ) formats
-  if (!certDateStr || certDateStr.length < 13) return certDateStr;
-  
-  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
-                  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+// Helper: Parse certificate date components from string
+function parseCertDateComponents(certDateStr) {
+  if (!certDateStr || certDateStr.length < 13) return null;
   
   let year, month, day, hour, minute, second;
   
@@ -28,7 +24,33 @@ function formatDate(certDateStr) {
     second = certDateStr.substring(12, 14);
   }
   
-  return `${months[month]} ${parseInt(day, 10)} ${hour}:${minute}:${second} ${year} GMT`;
+  return { year, month, day, hour, minute, second };
+}
+
+// Helper: Format certificate dates to standard format (MMM DD HH:MM:SS YYYY GMT)
+function formatDate(certDateStr) {
+  const components = parseCertDateComponents(certDateStr);
+  if (!components) return certDateStr;
+  
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  
+  return `${months[components.month]} ${parseInt(components.day, 10)} ${components.hour}:${components.minute}:${components.second} ${components.year} GMT`;
+}
+
+// Helper: Parse certificate date string to Date object
+function parseCertDate(certDateStr) {
+  const components = parseCertDateComponents(certDateStr);
+  if (!components) return null;
+  
+  return new Date(Date.UTC(
+    components.year, 
+    components.month, 
+    parseInt(components.day, 10), 
+    components.hour, 
+    components.minute, 
+    components.second
+  ));
 }
 
 // Helper: Extract CN from a distinguished name string
@@ -130,6 +152,15 @@ function processCertificate(pem) {
     var issuerStr = x509.getIssuerString();
     var notBefore = x509.getNotBefore();
     var notAfter = x509.getNotAfter();
+    console.log(notBefore, notAfter);
+    
+    // Parse dates to Date objects before calculating the difference
+    var notBeforeDate = parseCertDate(notBefore);
+    var notAfterDate = parseCertDate(notAfter);
+    
+    // Calculate lifetime in days
+    var certLifetime = Math.round((notAfterDate - notBeforeDate) / (1000 * 60 * 60 * 24)); // Days
+    
     var formattedNotBefore = formatDate(notBefore);
     var formattedNotAfter = formatDate(notAfter);
     
@@ -186,6 +217,10 @@ function processCertificate(pem) {
         <tr>
           <td>Valid To</td>
           <td>${formattedNotAfter}</td>
+        </tr>
+        <tr>
+          <td>Validity Period</td>
+          <td>${certLifetime} days</td>
         </tr>
         <tr>
           <td>SHA-1 Fingerprint</td>
