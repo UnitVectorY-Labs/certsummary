@@ -132,6 +132,84 @@ function formatDistinguishedName(dnString) {
   return formattedDN;
 }
 
+// Helper: Show the copy link button
+function showCopyLinkButton() {
+  document.getElementById('copy-link-container').style.display = 'block';
+}
+
+// Helper: Hide the copy link button
+function hideCopyLinkButton() {
+  document.getElementById('copy-link-container').style.display = 'none';
+  document.getElementById('copy-success').style.display = 'none';
+}
+
+// Helper: Encode certificate for URL sharing
+function encodeCertificateForURL(certText) {
+  try {
+    return btoa(encodeURIComponent(certText));
+  } catch (e) {
+    console.error('Error encoding certificate for URL:', e);
+    return null;
+  }
+}
+
+// Helper: Decode certificate from URL
+function decodeCertificateFromURL(encodedCert) {
+  try {
+    return decodeURIComponent(atob(encodedCert));
+  } catch (e) {
+    console.error('Error decoding certificate from URL:', e);
+    return null;
+  }
+}
+
+// Helper: Copy shareable link to clipboard
+function copyShareableLink() {
+  var certText = document.getElementById('cert-input').value.trim();
+  if (!certText || certText.indexOf('-----BEGIN CERTIFICATE-----') === -1) {
+    return;
+  }
+
+  var encodedCert = encodeCertificateForURL(certText);
+  if (!encodedCert) {
+    alert('Error creating shareable link');
+    return;
+  }
+
+  var shareableURL = window.location.origin + window.location.pathname + '#' + encodedCert;
+  
+  // Copy to clipboard
+  navigator.clipboard.writeText(shareableURL).then(function() {
+    // Show success message
+    var successSpan = document.getElementById('copy-success');
+    successSpan.style.display = 'inline';
+    
+    // Hide success message after 3 seconds
+    setTimeout(function() {
+      successSpan.style.display = 'none';
+    }, 3000);
+  }).catch(function(err) {
+    console.error('Failed to copy to clipboard:', err);
+    // Fallback: show the URL in an alert
+    alert('Copy this link to share:\n\n' + shareableURL);
+  });
+}
+
+// Helper: Load certificate from URL hash
+function loadCertificateFromURL() {
+  var hash = window.location.hash;
+  if (hash && hash.length > 1) {
+    var encodedCert = hash.substring(1); // Remove the # character
+    var certText = decodeCertificateFromURL(encodedCert);
+    
+    if (certText && certText.indexOf('-----BEGIN CERTIFICATE-----') !== -1) {
+      document.getElementById('cert-input').value = certText;
+      processCertificate(certText);
+      showCopyLinkButton();
+    }
+  }
+}
+
 function processCertificate(pem) {
   var output = document.getElementById('output');
   if (pem.indexOf('-----BEGIN CERTIFICATE-----') === -1) {
