@@ -18,9 +18,13 @@
     <section class="left">
       <h2>Paste PEM Certificate</h2>
       <div class="cert-input-container">
-        <textarea id="cert-input" placeholder="Paste your PEM certificate here:&#10;-----BEGIN CERTIFICATE-----&#10;...&#10;-----END CERTIFICATE-----)"></textarea>
+        <textarea id="cert-input" placeholder="Paste your PEM certificate here:&#10;&#10;-----BEGIN CERTIFICATE-----&#10;...&#10;-----END CERTIFICATE-----"></textarea>
       </div>
-      <p>Decode PEM SSL/TLS certificates instantly and securely. Even though certificates are public and you shouldn't have anything to hide, all decoding is performed directly in your browser.</p>
+      <p>Decode PEM SSL/TLS certificates instantly and securely. Even though certificates are public and you shouldn't have anything to hide, all decoding is performed directly in your browser. Copied links with certificates are passed as part of the fragment identifier in the URL and therefore not passed to the server.</p>
+      <div id="copy-link-container">
+        <button id="copy-link-btn" type="button">Copy Link</button>
+        <span id="copy-success" aria-live="polite">Link copied to clipboard!</span>
+      </div>
     </section>
 
     <section class="right">
@@ -39,12 +43,25 @@
     </p>
   </footer>
   <script>
+    // Load certificate from URL hash on page load
+    window.addEventListener('load', function() {
+      loadCertificateFromURL();
+    });
+
     // Process certificate when text input changes
     document.getElementById('cert-input').addEventListener('input', function() {
       var certText = this.value.trim();
       if (certText && certText.indexOf('-----BEGIN CERTIFICATE-----') !== -1) {
         processCertificate(certText);
+        showCopyLinkButton();
+      } else {
+        hideCopyLinkButton();
       }
+    });
+
+    // Copy link functionality
+    document.getElementById('copy-link-btn').addEventListener('click', function() {
+      copyShareableLink();
     });
   </script>
 </body>
