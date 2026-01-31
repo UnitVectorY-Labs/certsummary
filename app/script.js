@@ -263,6 +263,19 @@ function processCertificate(pem) {
     var pubKey = x509.getPublicKey();
     var keyAlgorithm = pubKey.type ? pubKey.type : "Unknown";
     var signatureAlgorithm = x509.getSignatureAlgorithmField();
+    
+    // Certificate Version (1-indexed as per X.509 convention: 1, 2, or 3)
+    var certVersion = x509.getVersion() + 1;
+    
+    // Public Key Size
+    var keySize = "N/A";
+    if (pubKey.type === "RSA" && pubKey.n) {
+      keySize = pubKey.n.bitLength() + " bits";
+    } else if (pubKey.type === "EC" && pubKey.curveName) {
+      keySize = pubKey.curveName;
+    } else if (pubKey.type === "DSA" && pubKey.p) {
+      keySize = pubKey.p.bitLength() + " bits";
+    }
 
     // Build the details table (alternating row colors applied via CSS)
     var html = `
@@ -287,6 +300,10 @@ function processCertificate(pem) {
             <div class="scroll-container">${formattedSerialNumber}</div>
             <small class="scroll-container raw-dn">${serialNumberHex}</small>
             </td>
+        </tr>
+        <tr>
+          <td>Version</td>
+          <td>V${certVersion}</td>
         </tr>
         <tr>
           <td>Valid From</td>
@@ -319,6 +336,10 @@ function processCertificate(pem) {
         <tr>
           <td>Key Algorithm</td>
           <td>${keyAlgorithm}</td>
+        </tr>
+        <tr>
+          <td>Key Size</td>
+          <td>${keySize}</td>
         </tr>
         <tr>
           <td>Signature Algorithm</td>
