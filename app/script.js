@@ -60,31 +60,29 @@ function extractCN(distinguishedName) {
   return match ? match[1].trim() : distinguishedName;
 }
 
-// Helper: Format Subject Alternative Names
+// Helper: Format Subject Alternative Names as pills
 function formatSANs(sanArray) {
   if (!sanArray || !Array.isArray(sanArray.array)) return "N/A";
   
   try {
-    // Create an unordered list for the SANs
-    let sanList = "<ul style='margin: 0; padding-left: 20px;'>";
+    let sanList = '<div class="san-wrap"><div class="san-list">';
     
-    // Loop through the SANs and add each as a list item
     for (let i = 0; i < sanArray.array.length; i++) {
       const san = sanArray.array[i];
       if (san.dns) {
-        sanList += `<li>DNS: <span class="domain-container">${san.dns}</span></li>`;
+        sanList += `<span class="san-pill">DNS: ${san.dns}</span>`;
       } else if (san.ip) {
-        sanList += `<li>IP: <span class="domain-container">${san.ip}</span></li>`;
+        sanList += `<span class="san-pill">IP: ${san.ip}</span>`;
       } else if (san.email) {
-        sanList += `<li>Email: <span class="domain-container">${san.email}</span></li>`;
+        sanList += `<span class="san-pill">Email: ${san.email}</span>`;
       } else if (san.uri) {
-        sanList += `<li>URI: <span class="domain-container">${san.uri}</span></li>`;
+        sanList += `<span class="san-pill">URI: ${san.uri}</span>`;
       } else {
-        sanList += `<li>${JSON.stringify(san)}</li>`;
+        sanList += `<span class="san-pill">${JSON.stringify(san)}</span>`;
       }
     }
     
-    sanList += "</ul>";
+    sanList += '</div></div>';
     return sanList;
   } catch (e) {
     console.error("Error formatting SANs:", e);
@@ -195,6 +193,24 @@ function copyShareableLink() {
   });
 }
 
+// Helper: Copy PEM from pre block
+function copyPEM(button) {
+  var preBlock = button.parentElement.querySelector('.pem-block');
+  if (!preBlock) return;
+  
+  navigator.clipboard.writeText(preBlock.textContent).then(function() {
+    var originalText = button.innerHTML;
+    button.innerHTML = '&#10003; Copied!';
+    button.setAttribute('aria-label', 'PEM copied to clipboard');
+    setTimeout(function() {
+      button.innerHTML = originalText;
+      button.setAttribute('aria-label', 'Copy PEM to clipboard');
+    }, 2000);
+  }).catch(function(err) {
+    console.error('Failed to copy PEM:', err);
+  });
+}
+
 // Helper: Load certificate from URL hash
 function loadCertificateFromURL() {
   var hash = window.location.hash;
@@ -213,7 +229,7 @@ function loadCertificateFromURL() {
 function processCertificate(pem) {
   var output = document.getElementById('output');
   if (pem.indexOf('-----BEGIN CERTIFICATE-----') === -1) {
-    output.innerHTML = '<p style="color:red;">Invalid certificate format.</p>';
+    output.innerHTML = '<div class="error-card"><p>Invalid certificate format.</p></div>';
     return;
   }
   try {
@@ -225,6 +241,7 @@ function processCertificate(pem) {
     var primaryCN = extractCN(subjectStr);
     var sanExt = x509.getExtSubjectAltName(); // Returns array of objects with SANs
     var formattedSANs = formatSANs(sanExt);
+    var sanCount = (sanExt && Array.isArray(sanExt.array)) ? sanExt.array.length : 0;
 
     // Certificate Validation
     var issuerStr = x509.getIssuerString();
@@ -241,6 +258,11 @@ function processCertificate(pem) {
     
     var formattedNotBefore = formatDate(notBefore);
     var formattedNotAfter = formatDate(notAfter);
+
+    // Check if expired or not yet valid
+    var now = new Date();
+    var isExpired = notAfterDate < now;
+    var isNotYetValid = notBeforeDate > now;
     
     // Format the distinguished name strings
     var formattedIssuer = formatDistinguishedName(issuerStr);
@@ -256,8 +278,8 @@ function processCertificate(pem) {
     var formattedSha1Fingerprint = formatHexWithColons(sha1Fingerprint);
     var sha256Fingerprint = KJUR.crypto.Util.hashHex(certHex, "sha256").toUpperCase();
     var formattedSha256Fingerprint = formatHexWithColons(sha256Fingerprint);
-    var sha1Link = `<a href="https://crt.sh/?q=${sha1Fingerprint}" target="_blank">↗️ crt.sh</a>`;
-    var sha256Link = `<a href="https://crt.sh/?q=${sha256Fingerprint}" target="_blank">↗️ crt.sh</a>`;
+    var sha1Link = `<a class="detail-link" href="https://crt.sh/?q=${sha1Fingerprint}" target="_blank">↗️ crt.sh</a>`;
+    var sha256Link = `<a class="detail-link" href="https://crt.sh/?q=${sha256Fingerprint}" target="_blank">↗️ crt.sh</a>`;
 
     // Security & Cryptographic Info
     var pubKey = x509.getPublicKey();
@@ -277,86 +299,119 @@ function processCertificate(pem) {
       keySize = pubKey.p.bitLength() + " bits";
     }
 
-    // Build the details table (alternating row colors applied via CSS)
+    // Validity status classes
+    var notBeforeClass = isNotYetValid ? 'detail-expired' : 'detail-valid';
+    var notAfterClass = isExpired ? 'detail-expired' : 'detail-valid';
+
+    // Build the cert-observatory style card layout
     var html = `
-      <table>
-        <tr>
-          <td>Subject</td>
-          <td>
-            ${formattedSubject}
-            <small class="raw-dn">${subjectStr}</small>
-          </td>
-        </tr>
-        <tr>
-          <td>Issuer</td>
-          <td>
-            ${formattedIssuer}
-            <small class="raw-dn">${issuerStr}</small>
-          </td>
-        </tr>
-        <tr>
-          <td>Serial Number</td>
-          <td>
-            <div class="scroll-container">${formattedSerialNumber}</div>
-            <small class="scroll-container raw-dn">${serialNumberHex}</small>
-            </td>
-        </tr>
-        <tr>
-          <td>Version</td>
-          <td>V${certVersion}</td>
-        </tr>
-        <tr>
-          <td>Valid From</td>
-          <td>${formattedNotBefore}</td>
-        </tr>
-        <tr>
-          <td>Valid To</td>
-          <td>${formattedNotAfter}</td>
-        </tr>
-        <tr>
-          <td>Validity Period</td>
-          <td>${certLifetime} days</td>
-        </tr>
-        <tr>
-          <td>SHA-1 Fingerprint</td>
-          <td>
-           <div class="scroll-container">${formattedSha1Fingerprint}</div>
-           <small class="scroll-container raw-dn">${sha1Fingerprint}</small>
-           ${sha1Link}
-           </td>
-        </tr>
-        <tr>
-          <td>SHA-256 Fingerprint</td>
-          <td>
-            <div class="scroll-container">${formattedSha256Fingerprint}</div>
-            <small class="scroll-container raw-dn">${sha256Fingerprint}</small>
-            ${sha256Link}
-          </td>
-        </tr>
-        <tr>
-          <td>Key Algorithm</td>
-          <td>${keyAlgorithm}</td>
-        </tr>
-        <tr>
-          <td>Key Size</td>
-          <td>${keySize}</td>
-        </tr>
-        <tr>
-          <td>Signature Algorithm</td>
-          <td>${signatureAlgorithm}</td>
-        </tr>
-        <tr>
-          <td>Primary Domain (CN)</td>
-          <td><span class="domain-container">${primaryCN}</span></td>
-        </tr>
-        <tr>
-          <td>Additional Domains (SANs)</td>
-          <td>${formattedSANs}</td>
-        </tr>
-      </table>
+      <div class="cert-card">
+        <div class="cert-top">
+          <span class="cert-label">
+            <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 15a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" /><path d="M13 17.5v4.5l2 -1.5l2 1.5v-4.5" /><path d="M10 19h-5a2 2 0 0 1 -2 -2v-10c0 -1.1 .9 -2 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -1 1.73" /><path d="M6 9l12 0" /><path d="M6 12l3 0" /><path d="M6 15l2 0" /></svg>
+            Certificate — ${primaryCN}
+          </span>
+        </div>
+        <div class="cert-content">
+          <div class="pem-column">
+            <div class="pem-wrap">
+              <pre class="pem-block">${pem}</pre>
+              <button type="button" class="btn-copy" aria-label="Copy PEM to clipboard" onclick="copyPEM(this)">
+                <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 9.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666" /><path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1" /></svg>
+                Copy PEM
+              </button>
+            </div>
+          </div>
+          <div class="details-stack">
+            <div class="detail-grid">
+              <div class="detail-item">
+                <div class="detail-label">Subject</div>
+                <div class="detail-box">
+                  ${formattedSubject}
+                  <small class="raw-dn">${subjectStr}</small>
+                </div>
+              </div>
+              <div class="detail-item">
+                <div class="detail-label">Issuer</div>
+                <div class="detail-box">
+                  ${formattedIssuer}
+                  <small class="raw-dn">${issuerStr}</small>
+                </div>
+              </div>
+            </div>
+            <div class="detail-grid">
+              <div class="detail-item">
+                <div class="detail-label">Not Before</div>
+                <div class="detail-value ${notBeforeClass}">${formattedNotBefore}</div>
+              </div>
+              <div class="detail-item">
+                <div class="detail-label">Not After</div>
+                <div class="detail-value ${notAfterClass}">${formattedNotAfter}</div>
+              </div>
+            </div>
+            <div class="detail-grid">
+              <div class="detail-item">
+                <div class="detail-label">Validity Period</div>
+                <div class="detail-value detail-muted">${certLifetime} days</div>
+              </div>
+              <div class="detail-item">
+                <div class="detail-label">Version</div>
+                <div class="detail-value detail-muted">V${certVersion}</div>
+              </div>
+            </div>
+            <div class="detail-grid">
+              <div class="detail-item">
+                <div class="detail-label">Serial Number</div>
+                <div class="detail-box detail-box-mono">
+                  ${formattedSerialNumber}
+                  <small class="raw-dn">${serialNumberHex}</small>
+                </div>
+              </div>
+              <div class="detail-item">
+                <div class="detail-label">Signature Algorithm</div>
+                <div class="detail-box">${signatureAlgorithm}</div>
+              </div>
+            </div>
+            <div class="detail-grid">
+              <div class="detail-item">
+                <div class="detail-label">Public Key</div>
+                <div class="detail-box">${keyAlgorithm}</div>
+              </div>
+              <div class="detail-item">
+                <div class="detail-label">Key Size</div>
+                <div class="detail-box">${keySize}</div>
+              </div>
+            </div>
+            <div class="detail-item">
+              <div class="detail-label">SHA-256 Fingerprint</div>
+              <div class="detail-box detail-box-mono">
+                ${formattedSha256Fingerprint}
+                <small class="raw-dn">${sha256Fingerprint}</small>
+                ${sha256Link}
+              </div>
+            </div>
+            <div class="detail-item">
+              <div class="detail-label">SHA-1 Fingerprint</div>
+              <div class="detail-box detail-box-mono">
+                ${formattedSha1Fingerprint}
+                <small class="raw-dn">${sha1Fingerprint}</small>
+                ${sha1Link}
+              </div>
+            </div>
+            <div class="detail-item">
+              <div class="detail-label">Primary Domain (CN)</div>
+              <div class="detail-box detail-box-mono">${primaryCN}</div>
+            </div>
+            <div class="detail-item">
+              <div class="detail-label">Subject Alternative Names (${sanCount})</div>
+              ${formattedSANs}
+            </div>
+          </div>
+        </div>
+      </div>
     `;
     output.innerHTML = html;
   } catch (e) {
-    output.innerHTML = '<p style="color:red;">Error decoding certificate.</p>';
+    output.innerHTML = '<div class="error-card"><p>Error decoding certificate.</p></div>';
   }
 }
