@@ -92,33 +92,26 @@ function formatSANs(sanArray) {
   }
 }
 
-// Helper: Format Extended Key Usage into a concise TLS role summary
+// Helper: Format Extended Key Usage
 function formatExtendedKeyUsage(ekuExt) {
   if (!ekuExt || !Array.isArray(ekuExt.array) || ekuExt.array.length === 0) return "N/A";
 
-  const hasServerAuth = ekuExt.array.indexOf("serverAuth") !== -1;
-  const hasClientAuth = ekuExt.array.indexOf("clientAuth") !== -1;
-  const otherUsages = ekuExt.array.filter(usage => usage !== "serverAuth" && usage !== "clientAuth");
-  let role;
+  const ekuLabels = {
+    "serverAuth": "Server Authentication",
+    "clientAuth": "Client Authentication",
+    "codeSigning": "Code Signing",
+    "emailProtection": "Email Protection",
+    "timeStamping": "Time Stamping",
+    "OCSP Signing": "OCSP Signing",
+    "smartcardLogon": "Smartcard Logon",
+    "serverGatedCrypto": "Server-Gated Crypto"
+  };
 
-  if (hasServerAuth && hasClientAuth) {
-    role = "Server and Client";
-  } else if (hasServerAuth) {
-    role = "Server";
-  } else if (hasClientAuth) {
-    role = "Client";
-  } else {
-    role = "Other";
-  }
-
-  let formattedEKU = `<div>${role}</div>`;
-  formattedEKU += "<ul style='margin: 4px 0 0; padding-left: 20px;'>";
-  if (hasServerAuth) formattedEKU += "<li>Server Authentication (serverAuth)</li>";
-  if (hasClientAuth) formattedEKU += "<li>Client Authentication (clientAuth)</li>";
-  otherUsages.forEach(usage => {
-    formattedEKU += `<li>${usage}</li>`;
+  let formattedEKU = "";
+  ekuExt.array.forEach((usage, index) => {
+    if (index > 0) formattedEKU += "<br>";
+    formattedEKU += ekuLabels[usage] || usage;
   });
-  formattedEKU += "</ul>";
 
   return formattedEKU;
 }
@@ -367,6 +360,10 @@ function processCertificate(pem) {
           </td>
         </tr>
         <tr>
+          <td>Extended Key Usage</td>
+          <td>${formattedEKU}</td>
+        </tr>
+        <tr>
           <td>Key Algorithm</td>
           <td>${keyAlgorithm}</td>
         </tr>
@@ -385,10 +382,6 @@ function processCertificate(pem) {
         <tr>
           <td>Additional Domains (SANs)</td>
           <td>${formattedSANs}</td>
-        </tr>
-        <tr>
-          <td>Extended Key Usage</td>
-          <td>${formattedEKU}</td>
         </tr>
       </table>
     `;
