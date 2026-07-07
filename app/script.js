@@ -92,6 +92,30 @@ function formatSANs(sanArray) {
   }
 }
 
+// Helper: Format Extended Key Usage
+function formatExtendedKeyUsage(ekuExt) {
+  if (!ekuExt || !Array.isArray(ekuExt.array) || ekuExt.array.length === 0) return "N/A";
+
+  const ekuLabels = {
+    "serverAuth": "Server Authentication",
+    "clientAuth": "Client Authentication",
+    "codeSigning": "Code Signing",
+    "emailProtection": "Email Protection",
+    "timeStamping": "Time Stamping",
+    "OCSP Signing": "OCSP Signing",
+    "smartcardLogon": "Smartcard Logon",
+    "serverGatedCrypto": "Server-Gated Crypto"
+  };
+
+  let formattedEKU = "";
+  ekuExt.array.forEach((usage, index) => {
+    if (index > 0) formattedEKU += "<br>";
+    formattedEKU += ekuLabels[usage] || usage;
+  });
+
+  return formattedEKU;
+}
+
 // Helper: Format hex string with colons for better readability
 function formatHexWithColons(hexString) {
   if (!hexString) return "Unknown";
@@ -225,6 +249,8 @@ function processCertificate(pem) {
     var primaryCN = extractCN(subjectStr);
     var sanExt = x509.getExtSubjectAltName(); // Returns array of objects with SANs
     var formattedSANs = formatSANs(sanExt);
+    var ekuExt = x509.getExtExtKeyUsage();
+    var formattedEKU = formatExtendedKeyUsage(ekuExt);
 
     // Certificate Validation
     var issuerStr = x509.getIssuerString();
@@ -332,6 +358,10 @@ function processCertificate(pem) {
             <small class="scroll-container raw-dn">${sha256Fingerprint}</small>
             ${sha256Link}
           </td>
+        </tr>
+        <tr>
+          <td>Extended Key Usage</td>
+          <td>${formattedEKU}</td>
         </tr>
         <tr>
           <td>Key Algorithm</td>
