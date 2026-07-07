@@ -92,6 +92,37 @@ function formatSANs(sanArray) {
   }
 }
 
+// Helper: Format Extended Key Usage into a concise TLS role summary
+function formatExtendedKeyUsage(ekuExt) {
+  if (!ekuExt || !Array.isArray(ekuExt.array) || ekuExt.array.length === 0) return "N/A";
+
+  const hasServerAuth = ekuExt.array.indexOf("serverAuth") !== -1;
+  const hasClientAuth = ekuExt.array.indexOf("clientAuth") !== -1;
+  const otherUsages = ekuExt.array.filter(usage => usage !== "serverAuth" && usage !== "clientAuth");
+  let role;
+
+  if (hasServerAuth && hasClientAuth) {
+    role = "Server and Client";
+  } else if (hasServerAuth) {
+    role = "Server";
+  } else if (hasClientAuth) {
+    role = "Client";
+  } else {
+    role = "Other";
+  }
+
+  let formattedEKU = `<div>${role}</div>`;
+  formattedEKU += "<ul style='margin: 4px 0 0; padding-left: 20px;'>";
+  if (hasServerAuth) formattedEKU += "<li>Server Authentication (serverAuth)</li>";
+  if (hasClientAuth) formattedEKU += "<li>Client Authentication (clientAuth)</li>";
+  otherUsages.forEach(usage => {
+    formattedEKU += `<li>${usage}</li>`;
+  });
+  formattedEKU += "</ul>";
+
+  return formattedEKU;
+}
+
 // Helper: Format hex string with colons for better readability
 function formatHexWithColons(hexString) {
   if (!hexString) return "Unknown";
@@ -225,6 +256,8 @@ function processCertificate(pem) {
     var primaryCN = extractCN(subjectStr);
     var sanExt = x509.getExtSubjectAltName(); // Returns array of objects with SANs
     var formattedSANs = formatSANs(sanExt);
+    var ekuExt = x509.getExtExtKeyUsage();
+    var formattedEKU = formatExtendedKeyUsage(ekuExt);
 
     // Certificate Validation
     var issuerStr = x509.getIssuerString();
@@ -352,6 +385,10 @@ function processCertificate(pem) {
         <tr>
           <td>Additional Domains (SANs)</td>
           <td>${formattedSANs}</td>
+        </tr>
+        <tr>
+          <td>Extended Key Usage</td>
+          <td>${formattedEKU}</td>
         </tr>
       </table>
     `;
