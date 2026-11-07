@@ -1,0 +1,63 @@
+Third-party notices — certsummary
+
+jsrsasign 11.1.0 (vendored, unmodified)
+  File: vendor/jsrsasign-all-min.js
+  Source: https://cdnjs.cloudflare.com/ajax/libs/jsrsasign/11.1.0/jsrsasign-all-min.js
+  Upstream: https://github.com/kjur/jsrsasign
+  SHA-512 (matches the previously pinned CDN SRI):
+    sha512-Eu9j+HZBor7muHf6IDWoWZ8FKVr6nKe9eIIVR28NEte4Y4GiYRlke26XGdR/re81XE/FfLoLYYVkvNk5GY9RvQ==
+  SHA-256: 6ccedfb9896ef454a92b081f29c229ca2a4969189661dcfa43f0eac12cb981a6
+  License: MIT (see below)
+
+  The 'jsrsasign'(RSA-Sign JavaScript Library) License
+
+  Copyright (c) 2010-2021 Kenji Urushima
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+  THE SOFTWARE.
+
+UVY Design v0.1.0 shared assets (copied verbatim)
+  Files: assets/uvy-tokens.css, assets/uvy-theme.js, assets/uvy-elements.css
+  Source: https://github.com/UnitVectorY-Labs/uvy-design (release v0.1.0,
+  commit 396a65021c2bcab8dbcb3d1bb4cb498c807a4396)
+  License: MIT, Copyright (c) 2026 UnitVectorY-Labs. Full text in the design
+  repository LICENSE file; SHA-256 checksums are recorded in UVY_DESIGN.md.
+
+Tabler outline icons (rendered inline in index.html and script.js output)
+  Icons: moon, sun, copy, external-link
+  Source: https://github.com/tabler/tabler-icons (as published in the
+  uvy-design v0.1.0 release, icons/ directory)
+  License: MIT, Copyright (c) 2020-2026 Paweł Kuna
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+  THE SOFTWARE.

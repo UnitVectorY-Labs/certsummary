@@ -237,7 +237,7 @@ function loadCertificateFromURL() {
 function processCertificate(pem) {
   var output = document.getElementById('output');
   if (pem.indexOf('-----BEGIN CERTIFICATE-----') === -1) {
-    output.innerHTML = '<p style="color:red;">Invalid certificate format.</p>';
+    output.innerHTML = '<p class="error-state">Invalid certificate format.</p>';
     return;
   }
   try {
@@ -282,8 +282,10 @@ function processCertificate(pem) {
     var formattedSha1Fingerprint = formatHexWithColons(sha1Fingerprint);
     var sha256Fingerprint = KJUR.crypto.Util.hashHex(certHex, "sha256").toUpperCase();
     var formattedSha256Fingerprint = formatHexWithColons(sha256Fingerprint);
-    var sha1Link = `<a href="https://crt.sh/?q=${sha1Fingerprint}" target="_blank">↗️ crt.sh</a>`;
-    var sha256Link = `<a href="https://crt.sh/?q=${sha256Fingerprint}" target="_blank">↗️ crt.sh</a>`;
+    // Inline official Tabler external-link icon (MIT) replaces the former decorative emoji.
+    var crtshIcon = '<svg class="uvy-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6"/><path d="M11 13l9 -9"/><path d="M15 4h5v5"/></svg>';
+    var sha1Link = `<a href="https://crt.sh/?q=${sha1Fingerprint}" target="_blank">${crtshIcon} crt.sh</a>`;
+    var sha256Link = `<a href="https://crt.sh/?q=${sha256Fingerprint}" target="_blank">${crtshIcon} crt.sh</a>`;
 
     // Security & Cryptographic Info
     var pubKey = x509.getPublicKey();
@@ -387,6 +389,6 @@ function processCertificate(pem) {
     `;
     output.innerHTML = html;
   } catch (e) {
-    output.innerHTML = '<p style="color:red;">Error decoding certificate.</p>';
+    output.innerHTML = '<p class="error-state">Error decoding certificate.</p>';
   }
 }

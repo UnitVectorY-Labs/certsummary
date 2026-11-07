@@ -1,28 +1,36 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>certsummary</title>
-  <link rel="stylesheet" href="style.css">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jsrsasign/11.1.0/jsrsasign-all-min.js" integrity="sha512-Eu9j+HZBor7muHf6IDWoWZ8FKVr6nKe9eIIVR28NEte4Y4GiYRlke26XGdR/re81XE/FfLoLYYVkvNk5GY9RvQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="assets/uvy-theme.js"></script>
+  <link rel="stylesheet" href="assets/uvy-tokens.css">
+  <link rel="stylesheet" href="assets/uvy-elements.css">
+  <link rel="stylesheet" href="style.css">
+  <script src="vendor/jsrsasign-all-min.js"></script>
   <script src="./script.js"></script>
 </head>
 <body>
 
   <nav class="navbar">
     <h1>certsummary</h1>
+    <button class="uvy-theme-toggle" data-uvy-theme-toggle hidden type="button" aria-label="Switch to dark mode">
+      <span class="uvy-theme-dark-icon" aria-hidden="true" focusable="false"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454l0 .008"/></svg></span>
+      <span class="uvy-theme-light-icon" aria-hidden="true" focusable="false"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 12a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"/><path d="M3 12h1m8 -9v1m8 8h1m-9 8v1m-6.4 -15.4l.7 .7m12.1 -.7l-.7 .7m0 11.4l.7 .7m-12.1 -.7l-.7 .7"/></svg></span>
+    </button>
   </nav>
 
   <main>
     <section class="left">
-      <h2>Paste PEM Certificate</h2>
+      <h2 id="input-heading">Paste PEM Certificate</h2>
       <div class="cert-input-container">
+        <label for="cert-input" class="uvy-sr-only">PEM certificate text</label>
         <textarea id="cert-input" placeholder="Paste your PEM certificate here:&#10;&#10;-----BEGIN CERTIFICATE-----&#10;...&#10;-----END CERTIFICATE-----"></textarea>
       </div>
       <p>Decode PEM SSL/TLS certificates instantly and securely. Even though certificates are public and you shouldn't have anything to hide, all decoding is performed directly in your browser. Copied links with certificates are passed as part of the fragment identifier in the URL and therefore not passed to the server.</p>
       <div id="copy-link-container">
-        <button id="copy-link-btn" type="button">Copy Link</button>
+        <button id="copy-link-btn" class="uvy-button uvy-button-primary" type="button"><svg class="uvy-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 9.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666"/><path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1"/></svg> Copy Link</button>
         <span id="copy-success" aria-live="polite">Link copied to clipboard!</span>
       </div>
     </section>
@@ -35,7 +43,7 @@
     </section>
   </main>
 
-  <footer>
+  <footer class="uvy-footer">
     <p>
       <a href="https://github.com/UnitVectorY-Labs">UnitVectorY Labs</a> |
       <a href="https://opensource.org/licenses/MIT">MIT License</a> |
