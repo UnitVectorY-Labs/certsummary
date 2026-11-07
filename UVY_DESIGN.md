@@ -1,8 +1,8 @@
 # UVY Design v0.1.0 adoption
 
-Source release: https://github.com/UnitVectorY-Labs/uvy-design/releases/tag/v0.1.0
+Source standards snapshot: https://github.com/UnitVectorY-Labs/uvy-design/tree/12f8e3d964785d78628346516351fe4dac583cef
 
-Pinned source commit: `396a65021c2bcab8dbcb3d1bb4cb498c807a4396`.
+Pinned source commit: `12f8e3d964785d78628346516351fe4dac583cef`.
 
 Canonical tokens, the theme controller and the opt-in element treatments are copied verbatim into `app/assets/`: `uvy-tokens.css`, `uvy-theme.js` and `uvy-elements.css` (the last is used for the theme toggle, primary button, footer and icon sizing). `app/style.css` is the app-specific adapter that maps the existing selectors to the tokens. The official Tabler moon, sun, copy and external-link SVG paths are inlined in `index.html` and the crt.sh link output; the MIT icon notice is retained in `app/THIRD_PARTY_NOTICES.txt`. jsrsasign 11.1.0 is vendored unmodified at `app/vendor/jsrsasign-all-min.js`; its SHA-512 matches the SRI previously pinned for the cdnjs copy, so the CDN `<script>` was replaced with the local file. No HTMX, framework or external runtime dependency is introduced.
 
@@ -20,7 +20,7 @@ No screenshots are committed to this application. Evidence is hosted in the desi
 
 ## Update procedure
 
-Choose a reviewed future release, verify archive checksums and file hashes, then replace only the canonical copied files in `app/assets/`. Review source diffs and update this record; keep app-specific adapter changes in `app/style.css`. Rebuild nothing (static site), rerun `node --test tests/`, and repeat the browser/evidence checks before updating. Never fetch design assets at browser runtime or from a mutable branch.
+Choose a reviewed future design commit, verify file hashes and file hashes, then replace only the canonical copied files in `app/assets/`. Review source diffs and update this record; keep app-specific adapter changes in `app/style.css`. Rebuild nothing (static site), rerun `node --test tests/`, and repeat the browser/evidence checks before updating. Never fetch design assets at browser runtime or from a mutable branch.
 
 ## Copied-file SHA-256
 
