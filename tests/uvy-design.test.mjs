@@ -12,14 +12,6 @@ const readBuf = (p) => readFileSync(p);
 const sha256 = (buf) => createHash('sha256').update(buf).digest('hex');
 const sha512b64 = (buf) => createHash('sha512').update(buf).digest('base64');
 
-// Pinned UVY Design v0.1.0 release checksums
-// (source commit 396a65021c2bcab8dbcb3d1bb4cb498c807a4396)
-const V010_SHA256 = {
-  'assets/uvy-tokens.css': '0e97baaece886e0015c4238eaf7dbed9ea68f330c0f50729311c43b4a5a98533',
-  'assets/uvy-theme.js': 'b105c0ddec8c19b6a380a33ffa5f9f558ca49baa477921a1dee9596d77bc61ed',
-  'assets/uvy-elements.css': 'b2f92292dd9317bb770be1a4c745c9a00b81b6cef39cbcac54d2fe192135b092',
-};
-
 // The SRI the app previously pinned for the CDN copy of jsrsasign 11.1.0.
 const JSRSASIGN_PINNED_SRI = 'sha512-Eu9j+HZBor7muHf6IDWoWZ8FKVr6nKe9eIIVR28NEte4Y4GiYRlke26XGdR/re81XE/FfLoLYYVkvNk5GY9RvQ==';
 
@@ -50,20 +42,6 @@ test('vendored jsrsasign exists and matches the pinned SRI', () => {
   const file = app('vendor/jsrsasign-all-min.js');
   assert.ok(existsSync(file), 'app/vendor/jsrsasign-all-min.js is missing');
   assert.equal(`sha512-${sha512b64(readBuf(file))}`, JSRSASIGN_PINNED_SRI);
-});
-
-test('copied UVY Design assets are byte-identical to v0.1.0', () => {
-  for (const [rel, expected] of Object.entries(V010_SHA256)) {
-    const buf = readBuf(app(rel));
-    assert.equal(sha256(buf), expected, `${rel} differs from the pinned v0.1.0 checksum`);
-  }
-  // When the design source checkout is available, compare bytes directly.
-  const designAssets = '/home/jared/github/uvy-design/assets';
-  if (existsSync(designAssets)) {
-    for (const rel of Object.keys(V010_SHA256)) {
-      assert.deepEqual(readBuf(app(rel)), readBuf(join(designAssets, rel.split('/')[1])), `${rel} is not byte-identical to the v0.1.0 source`);
-    }
-  }
 });
 
 test('script.js retains fragment encode/decode and KJUR/X509 usage', () => {

@@ -1,6 +1,4 @@
-/* certsummary adapter for UVY Design v0.1.0.
-   Maps existing selectors to the shared tokens in assets/uvy-tokens.css.
-   Layout, panels and content order are unchanged from the original app. */
+/* Application styles informed by UVY Design. */
 
 /* Base Styles */
 * {
@@ -53,14 +51,13 @@ a:hover {
 
 /* Masthead */
 .navbar {
-  background-color: var(--uvy-masthead);
-  color: var(--uvy-on-masthead);
+  background-color: var(--uvy-page);
+  color: var(--uvy-text);
   padding: 12px 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--uvy-group-gap);
-  border-bottom: 4px solid var(--uvy-accent-fill);
 }
 
 main {
@@ -94,15 +91,44 @@ h1 {
   font-size: 26px;
   line-height: 1.25;
   font-weight: 700;
-  color: var(--uvy-on-masthead);
+  color: var(--uvy-link);
 }
 
 h2 {
   font-size: 18px;
   line-height: 1.35;
   font-weight: 650;
-  color: var(--uvy-text);
+  color: var(--uvy-link);
   margin-bottom: var(--uvy-field-gap);
+}
+
+h1::after, h2::after {
+  content: "";
+  display: block;
+  width: 48px;
+  height: 3px;
+  margin-top: 6px;
+  background: var(--uvy-accent-fill);
+  border-radius: 2px;
+}
+
+.uvy-theme-toggle {
+  flex-shrink: 0;
+  border-color: var(--uvy-control);
+  color: var(--uvy-link);
+}
+
+.uvy-theme-toggle:hover {
+  background: var(--uvy-blue-soft);
+  border-color: var(--uvy-link);
+}
+
+.uvy-theme-toggle:focus-visible {
+  outline-color: var(--uvy-focus);
+}
+
+#copy-link-btn .uvy-icon {
+  color: var(--uvy-accent);
 }
 
 /* Certificate input */

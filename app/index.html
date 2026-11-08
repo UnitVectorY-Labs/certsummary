@@ -23,14 +23,13 @@
 
   <main>
     <section class="left">
-      <h2 id="input-heading">Paste PEM Certificate</h2>
+      <h2 id="input-heading"><label for="cert-input">Paste PEM Certificate</label></h2>
       <div class="cert-input-container">
-        <label for="cert-input" class="uvy-sr-only">PEM certificate text</label>
         <textarea id="cert-input" placeholder="Paste your PEM certificate here:&#10;&#10;-----BEGIN CERTIFICATE-----&#10;...&#10;-----END CERTIFICATE-----"></textarea>
       </div>
       <p>Decode PEM SSL/TLS certificates instantly and securely. Even though certificates are public and you shouldn't have anything to hide, all decoding is performed directly in your browser. Copied links with certificates are passed as part of the fragment identifier in the URL and therefore not passed to the server.</p>
       <div id="copy-link-container">
-        <button id="copy-link-btn" class="uvy-button uvy-button-primary" type="button"><svg class="uvy-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 9.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666"/><path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1"/></svg> Copy Link</button>
+        <button id="copy-link-btn" class="uvy-button" type="button"><svg class="uvy-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 9.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666"/><path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1"/></svg> Copy Link</button>
         <span id="copy-success" aria-live="polite">Link copied to clipboard!</span>
       </div>
     </section>
