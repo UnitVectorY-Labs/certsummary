@@ -110,9 +110,9 @@ a:hover {
 
 /* Masthead */
 .navbar {
-  background-color: var(--uvy-page);
-  color: var(--uvy-text);
-  padding: 12px 24px;
+  background-color: #174b93;
+  color: #fff;
+  padding: 12px max(1rem, calc((100% - 75rem) / 2));
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -152,7 +152,7 @@ h1 {
   font-size: 2rem;
   line-height: 1.2;
   font-weight: 600;
-  color: var(--uvy-link);
+  color: #fff;
 }
 
 h2 {
@@ -175,17 +175,17 @@ h1::after, h2::after {
 
 .uvy-theme-toggle {
   flex-shrink: 0;
-  border-color: var(--uvy-control);
-  color: var(--uvy-link);
+  border-color: #b8cdea;
+  color: #fff;
 }
 
 .uvy-theme-toggle:hover {
-  background: var(--uvy-blue-soft);
-  border-color: var(--uvy-link);
+  background: rgb(255 255 255 / 12%);
+  border-color: #fff;
 }
 
 .uvy-theme-toggle:focus-visible {
-  outline-color: var(--uvy-focus);
+  outline-color: #fff;
 }
 
 #copy-link-btn .uvy-icon {
