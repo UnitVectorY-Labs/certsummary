@@ -1,3 +1,62 @@
+:root {
+  color-scheme: light;
+  --uvy-font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --uvy-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --uvy-page: #f3f6fc;
+  --uvy-surface: #ffffff;
+  --uvy-text: #182b49;
+  --uvy-muted: #50617c;
+  --uvy-divider: #cfdaeb;
+  --uvy-control: #7285a1;
+  --uvy-link: #1558ba;
+  --uvy-blue-soft: #e9f1ff;
+  --uvy-on-masthead: #ffffff;
+  --uvy-accent: #a83e00;
+  --uvy-accent-fill: #ff932e;
+  --uvy-accent-ink: #34200b;
+  --uvy-focus: #1558ba;
+  --uvy-success: #166338;
+  --uvy-danger: #a32232;
+  --uvy-radius-control: 6px;
+  --uvy-radius-panel: 8px;
+  --uvy-shadow: 0 1px 3px rgb(24 43 73 / 8%);
+  --uvy-section-gap: 24px;
+  --uvy-panel-pad: 16px;
+  --uvy-row-y: 12px;
+  --uvy-row-x: 16px;
+  --uvy-field-gap: 12px;
+  --uvy-group-gap: 16px;
+  --uvy-button-x: 16px;
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --uvy-page: #0c1729;
+  --uvy-surface: #14243c;
+  --uvy-text: #edf3ff;
+  --uvy-muted: #b2c2da;
+  --uvy-divider: #354b6b;
+  --uvy-control: #8096b7;
+  --uvy-link: #8dbbff;
+  --uvy-blue-soft: #1b3559;
+  --uvy-accent: #ffb16d;
+  --uvy-focus: #ffb16d;
+  --uvy-success: #91dfb4;
+  --uvy-danger: #ffabb5;
+  --uvy-shadow: 0 1px 3px rgb(0 0 0 / 24%);
+}
+
+.uvy-button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 8px var(--uvy-button-x); border: 1px solid var(--uvy-control); border-radius: var(--uvy-radius-control); background: var(--uvy-surface); color: var(--uvy-text); font: 600 1rem/1.5 var(--uvy-font); cursor: pointer; }
+.uvy-button:hover { border-color: var(--uvy-link); }
+.uvy-icon { display: inline-block; width: 20px; height: 20px; flex-shrink: 0; vertical-align: middle; }
+.uvy-theme-toggle { width: 44px; height: 44px; min-height: 44px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border: 1px solid #b6d3ff; border-radius: var(--uvy-radius-control); background: transparent; color: var(--uvy-on-masthead); cursor: pointer; }
+.uvy-theme-toggle:hover { background: rgb(255 255 255 / 12%); border-color: #fff; }
+.uvy-theme-toggle:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+.uvy-theme-light-icon, [data-theme="dark"] .uvy-theme-dark-icon { display: none; }
+[data-theme="dark"] .uvy-theme-light-icon { display: inline-flex; }
+.uvy-footer { padding-block: 20px; border-top: 1px solid var(--uvy-divider); background: var(--uvy-surface); color: var(--uvy-muted); font: 400 13px/1.5 var(--uvy-font); }
+.uvy-footer a { color: var(--uvy-link); text-underline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { .uvy-button, .uvy-theme-toggle { transition: none; } }
+
 /* Application styles informed by UVY Design. */
 
 /* Base Styles */
@@ -269,6 +328,10 @@ footer p {
 
 /* Mobile: stack the two workspace panes; both remain fully usable */
 @media (max-width: 900px) {
+  .navbar {
+    padding-inline: 16px;
+  }
+
   main {
     flex-direction: column;
     padding: 16px;
