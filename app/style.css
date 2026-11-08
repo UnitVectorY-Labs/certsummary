@@ -64,15 +64,17 @@ main {
   flex: 1 0 auto;
   display: flex;
   align-items: flex-start;
-  padding: 24px;
-  gap: var(--uvy-section-gap);
+  width: min(100%, 79rem);
+  margin-inline: auto;
+  padding: 2rem;
+  gap: 2rem;
 }
 
 .left,
 .right {
   background-color: var(--uvy-surface);
   border: 1px solid var(--uvy-divider);
-  padding: 24px;
+  padding: 1rem;
   border-radius: var(--uvy-radius-panel);
   box-shadow: var(--uvy-shadow);
 }
@@ -88,16 +90,16 @@ main {
 }
 
 h1 {
-  font-size: 26px;
-  line-height: 1.25;
-  font-weight: 700;
+  font-size: 2rem;
+  line-height: 1.2;
+  font-weight: 600;
   color: var(--uvy-link);
 }
 
 h2 {
-  font-size: 18px;
-  line-height: 1.35;
-  font-weight: 650;
+  font-size: 1.5rem;
+  line-height: 1.2;
+  font-weight: 600;
   color: var(--uvy-link);
   margin-bottom: var(--uvy-field-gap);
 }
