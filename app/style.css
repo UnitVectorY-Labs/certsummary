@@ -1,3 +1,64 @@
+:root {
+  color-scheme: light;
+  --uvy-font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --uvy-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --uvy-page: #f3f6fc;
+  --uvy-surface: #ffffff;
+  --uvy-text: #182b49;
+  --uvy-muted: #50617c;
+  --uvy-divider: #cfdaeb;
+  --uvy-control: #7285a1;
+  --uvy-link: #1558ba;
+  --uvy-blue-soft: #e9f1ff;
+  --uvy-on-masthead: #ffffff;
+  --uvy-accent: #a83e00;
+  --uvy-accent-fill: #ff932e;
+  --uvy-accent-ink: #34200b;
+  --uvy-focus: #1558ba;
+  --uvy-success: #166338;
+  --uvy-danger: #a32232;
+  --uvy-radius-control: 6px;
+  --uvy-radius-panel: 8px;
+  --uvy-shadow: 0 1px 3px rgb(24 43 73 / 8%);
+  --uvy-section-gap: 24px;
+  --uvy-panel-pad: 16px;
+  --uvy-row-y: 12px;
+  --uvy-row-x: 16px;
+  --uvy-field-gap: 12px;
+  --uvy-group-gap: 16px;
+  --uvy-button-x: 16px;
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --uvy-page: #0c1729;
+  --uvy-surface: #14243c;
+  --uvy-text: #edf3ff;
+  --uvy-muted: #b2c2da;
+  --uvy-divider: #354b6b;
+  --uvy-control: #8096b7;
+  --uvy-link: #8dbbff;
+  --uvy-blue-soft: #1b3559;
+  --uvy-accent: #ffb16d;
+  --uvy-focus: #ffb16d;
+  --uvy-success: #91dfb4;
+  --uvy-danger: #ffabb5;
+  --uvy-shadow: 0 1px 3px rgb(0 0 0 / 24%);
+}
+
+.uvy-button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 8px var(--uvy-button-x); border: 1px solid var(--uvy-control); border-radius: var(--uvy-radius-control); background: var(--uvy-surface); color: var(--uvy-text); font: 600 1rem/1.5 var(--uvy-font); cursor: pointer; }
+.uvy-button:hover { border-color: var(--uvy-link); }
+.uvy-icon { display: inline-block; width: 20px; height: 20px; flex-shrink: 0; vertical-align: middle; }
+.uvy-theme-toggle { width: 44px; height: 44px; min-height: 44px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border: 1px solid #b6d3ff; border-radius: var(--uvy-radius-control); background: transparent; color: var(--uvy-on-masthead); cursor: pointer; }
+.uvy-theme-toggle:hover { background: rgb(255 255 255 / 12%); border-color: #fff; }
+.uvy-theme-toggle:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+.uvy-theme-light-icon, [data-theme="dark"] .uvy-theme-dark-icon { display: none; }
+[data-theme="dark"] .uvy-theme-light-icon { display: inline-flex; }
+.uvy-footer { padding-block: 20px; border-top: 1px solid var(--uvy-divider); background: var(--uvy-surface); color: var(--uvy-muted); font: 400 13px/1.5 var(--uvy-font); }
+.uvy-footer a { color: var(--uvy-link); text-underline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { .uvy-button, .uvy-theme-toggle { transition: none; } }
+
+/* Application styles informed by UVY Design. */
+
 /* Base Styles */
 * {
   margin: 0;
@@ -6,18 +67,17 @@
 }
 
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  line-height: 1.6;
-  background-color: #f4f4f4;
-  color: #333;
+  font-family: var(--uvy-font);
+  line-height: 1.5;
+  background-color: var(--uvy-page);
+  color: var(--uvy-text);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  height: 100vh;
 }
 
 a {
-  color: #3b82f6;
+  color: var(--uvy-link);
   text-decoration: none;
 }
 
@@ -25,28 +85,57 @@ a:hover {
   text-decoration: underline;
 }
 
+:focus-visible {
+  outline: 3px solid var(--uvy-focus);
+  outline-offset: 2px;
+}
+
+.uvy-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Keep the theme button hidden until the controller reveals it
+   (the opt-in .uvy-theme-toggle display rule would otherwise win). */
+.uvy-theme-toggle[hidden] {
+  display: none;
+}
+
+/* Masthead */
 .navbar {
-  background-color: #3b82f6;
+  background-color: #174b93;
   color: #fff;
-  padding: 15px 20px;
+  padding: 12px max(1rem, calc((100% - 75rem) / 2));
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  gap: var(--uvy-group-gap);
 }
 
 main {
   flex: 1 0 auto;
   display: flex;
-  padding: 20px;
-  gap: 20px;
+  align-items: flex-start;
+  width: min(100%, 79rem);
+  margin-inline: auto;
+  padding: 2rem;
+  gap: 2rem;
 }
 
 .left,
 .right {
-  background-color: #fff;
-  padding: 25px;
-  border-radius: 6px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background-color: var(--uvy-surface);
+  border: 1px solid var(--uvy-divider);
+  padding: 1rem;
+  border-radius: var(--uvy-radius-panel);
+  box-shadow: var(--uvy-shadow);
 }
 
 .left {
@@ -60,35 +149,76 @@ main {
 }
 
 h1 {
-  font-size: 1.5em;
-  color: #ffffff;
+  font-size: 2rem;
+  line-height: 1.2;
+  font-weight: 600;
+  color: #fff;
 }
 
 h2 {
-  font-size: 1.2em;
-  color: #2c3e50;
-  margin-bottom: 15px;
+  font-size: 1.5rem;
+  line-height: 1.2;
+  font-weight: 600;
+  color: var(--uvy-link);
+  margin-bottom: var(--uvy-field-gap);
 }
 
-/* File input styling */
+h1::after, h2::after {
+  content: "";
+  display: block;
+  width: 48px;
+  height: 3px;
+  margin-top: 6px;
+  background: var(--uvy-accent-fill);
+  border-radius: 2px;
+}
+
+.uvy-theme-toggle {
+  flex-shrink: 0;
+  border-color: #b8cdea;
+  color: #fff;
+}
+
+.uvy-theme-toggle:hover {
+  background: rgb(255 255 255 / 12%);
+  border-color: #fff;
+}
+
+.uvy-theme-toggle:focus-visible {
+  outline-color: #fff;
+}
+
+#copy-link-btn .uvy-icon {
+  color: var(--uvy-accent);
+}
+
+/* Certificate input */
 .cert-input-container {
-  margin-bottom: 20px;
+  margin-bottom: var(--uvy-section-gap);
 }
 
 textarea {
   display: block;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  padding: 12px;
+  border: 1px solid var(--uvy-control);
+  border-radius: var(--uvy-radius-control);
   width: 100%;
   min-height: 500px;
-  font-family: monospace;
+  font-family: var(--uvy-mono);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--uvy-text);
+  background-color: var(--uvy-surface);
   resize: vertical;
   overflow-x: auto;
   white-space: pre;
 }
 
-/* Table Styles */
+textarea::placeholder {
+  color: var(--uvy-muted);
+}
+
+/* Result table */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -97,17 +227,20 @@ table {
 }
 
 table tr:nth-child(even) {
-  background-color: #f8f9fa;
+  background-color: var(--uvy-blue-soft);
 }
 
 table td {
-  padding: 10px;
-  border: 1px solid #ccc;
+  padding: var(--uvy-row-y) var(--uvy-row-x);
+  border: 1px solid var(--uvy-divider);
   word-break: break-word;
+  font-size: 14px;
+  line-height: 1.6;
 }
 
 table td:first-child {
-  font-weight: bold;
+  font-weight: 600;
+  color: var(--uvy-muted);
   width: 40%;
   vertical-align: top;
 }
@@ -124,55 +257,41 @@ table td:last-child {
   white-space: nowrap;
   padding: 2px 0;
   margin-bottom: 1px;
-  font-family: monospace;
+  font-family: var(--uvy-mono);
 }
 
 .domain-container {
-  font-family: monospace;
+  font-family: var(--uvy-mono);
 }
 
-/* Copy Link Button Styles */
+/* Copy Link Button */
 #copy-link-btn {
-  background-color: #3b82f6;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  transition: background-color 0.2s;
-}
-
-#copy-link-btn:hover {
-  background-color: #2563eb;
-}
-
-#copy-link-btn:active {
-  background-color: #1d4ed8;
+  min-height: 44px;
 }
 
 #copy-success {
   display: none;
-  margin-left: 10px;
-  color: green;
+  margin-left: var(--uvy-field-gap);
+  color: var(--uvy-success);
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 #copy-link-container {
   display: none;
-  margin-top: 10px;
+  margin-top: var(--uvy-group-gap);
 }
 
-/* Footer Styles */
+/* Error states (styled with the danger token, text unchanged) */
+.error-state {
+  color: var(--uvy-danger);
+  font-weight: 600;
+}
+
+/* Footer */
 footer {
-  background-color: #2c3e50;
-  color: #9ca3af;
   text-align: center;
-  padding: 1rem;
-  font-size: 0.8em;
-  border-top: 1px solid #e5e7eb;
+  padding: 20px 24px;
   margin-top: auto;
   width: 100%;
   flex-shrink: 0;
@@ -180,17 +299,7 @@ footer {
 
 footer p {
   margin: 0;
-  line-height: 1.4;
-}
-
-footer a {
-  color: #9ca3af;
-  text-decoration: none;
-  transition: color 0.2s;
-}
-
-footer a:hover {
-  color: #fff;
+  line-height: 1.5;
 }
 
 /* Distinguished Name Formatting */
@@ -205,13 +314,37 @@ footer a:hover {
 }
 
 .dn-label {
-  font-weight: bold;
+  font-weight: 600;
   margin-right: 5px;
 }
 
 .raw-dn {
-  color: #777;
-  font-size: 0.8em;
+  color: var(--uvy-muted);
+  font-size: 13px;
   margin-top: 4px;
   display: block;
+  font-family: var(--uvy-mono);
+}
+
+/* Mobile: stack the two workspace panes; both remain fully usable */
+@media (max-width: 900px) {
+  .navbar {
+    padding-inline: 16px;
+  }
+
+  main {
+    flex-direction: column;
+    padding: 16px;
+    gap: var(--uvy-group-gap);
+  }
+
+  .left,
+  .right {
+    max-width: none;
+    width: 100%;
+  }
+
+  textarea {
+    min-height: 260px;
+  }
 }
